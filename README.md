@@ -22,25 +22,25 @@ date : 2017-12-13
 
 # File Organiztion
 
-main files are in "coverage":
+## main files are in "coverage":
 
-// coverage planner
+### coverage planner:
 
 1. coverage.cpp: coverage path planner 
 
-// point to point planner
+### point to point planner:
 
 2. directGo.cpp : point to point path planner in exhausted way;
 3. astar.cpp: point to point path planner 
 
-easy examples in seperate files(each file has seperate main) :
-1. Point to Point planning 
+## easy examples in seperate files(each file has seperate main) :
+### Point to Point planning 
 
 "p2pFreePrintMap.cpp":show map and path , 
 
 "Point2PointFree.cpp":no map shows
 
-2. Coverage planning: 
+### Coverage planning: 
 
 "CoverageOverLap.cpp": simple spiral coverage, if meets deadlocks, stop
 
