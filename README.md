@@ -4,13 +4,19 @@
 
 author : jiayao 
 
-date : 2017-12-13
+date : 2017-12-15
 
 ## done
 
  - point to point path planner (in exhausted way; in Astar way)
  - coverage path planner in exhausted way;(sprial direction template)
 
+例子，运行 /coverage/coverage/main.cpp：
+![astar result][1]
+fig. 1 初始地图，0 free -1 obstacle 1 startpoint
+fig. 2 覆盖之后，数字代表步数step，-1为障碍物。覆盖方法是贪心法。
+fig. 3 遇到deadlock的情况(周围点都走过，或者为障碍物，图中为点32)，为了保证完整覆盖，利用点到点规划到新起点后继续进行覆盖，这里采用astar点到点规划（另有有回溯法可选）
+fig. 4 完整路径 步数：坐标（col,row） 
 ## todo
 
 - Spiral tree coverage in matlab upload;
@@ -48,7 +54,38 @@ date : 2017-12-13
 
 "CoverageDirectP2P.cpp": if meet deadlocks go to new point by point-to-point planner then restart.
 
-## Algorithm
+## Coverage path planning algorithm
+outline: 
+✅贪心法
+STC
+BSA
+Bio-inspired
+
+### 贪心法
+步骤：
+- 一直以一个方向前进
+- 如果不能走则按顺序换方向
+- 如果死锁寻找最近未覆盖点，点到点规划过去
+- 然后重新开心覆盖
+- 直到地图全部走过
+
+伪代码
+```
+while(current node is in range , still has unvisited node in map){
+    next node = current node in current direction;
+    if next node can go
+        go;
+    else 
+        tmp node = current node change direction;;
+        if all surronding nodes can not go this is a deadlock situation;
+            find nearest unvistied node as a new start;
+            use point to point path planning to get to a new start;
+            caculate overlap
+}
+```
+
+
+## Point to point path planning algorithm
 outline: 
 ✅astar
 ✅递归
@@ -92,12 +129,8 @@ while(open list not empty)
 }
 if openlist is empty , no path;
 ```
+代码示例，/coverage/coverage/astar.cpp
 
 
 
-
-
-
-
-
-
+  [1]: https://wx3.sinaimg.cn/mw690/c7716318gy1fmho52e44nj20ad0dlmy5.jpg
