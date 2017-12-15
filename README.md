@@ -7,18 +7,18 @@ author : jiayao
 date : 2017-12-13
 
 ## done
-1. point to point path planner in exhausted way;
-2. coverage path planner in exhausted way;(sprial direction template)
+
+ - point to point path planner (in exhausted way; in Astar way)
+ - coverage path planner in exhausted way;(sprial direction template)
 
 ## todo
-1. Point to Point path planner A star;
-2. Point to Point path planner D star;
-3. Spiral tree coverage in matlab upload;
-4. Sprial tree coverage in c++ under ROS;
-5. Spiral tree coverage in c++;
-6. Bio-inspired CCPP in matlab upload;
-7. Bio-inspried CCPP in c++ under ROS;
-8. Bio-inspired CCPP in c++;
+
+- Spiral tree coverage in matlab upload;
+- Sprial tree coverage in c++ under ROS;
+- Spiral tree coverage in c++;
+- Bio-inspired CCPP in matlab upload;
+- Bio-inspried CCPP in c++ under ROS;
+- Bio-inspired CCPP in c++;
 
 ## File Organiztion
 
@@ -50,14 +50,14 @@ date : 2017-12-13
 
 ## Algorithm
 outline: 
-✅a star
+✅astar
 ✅递归
 非递归
 广度优先
 深度优先
 使用对战
 
-### A start point to point planning
+### Astar point to point planning
 步骤：
 1. 从起点start开始，把它作为待处理的节点放在open list中，open list是个等待检查的列表
 2. 寻找起点start周围可以到达的方格，将他们放入开启列表，并且设置他们的parent为start.
@@ -69,27 +69,31 @@ outline:
 8. 当终点被加入到open list，说明路径已经找到
 
 路径：
-通过Parent找到路径。
+通过Parent找到路径，再反转，即为start到goal的路径。
 
 伪代码：
 ```
-do
+while(open list not empty)
 {
     find cur node which has min fvalue;
     delete curnode in openlist;
     add curnode to closelist;
     find valiable nodes around cur node;
-    if valiable node not in openlist
-        add to openlist
-        calculate f=g+h
-        set parent is curnode;
-    if valiable node in openlist
-        if node.g lower than cur.g
-            curnode = node.parent
+        if valiable node not in openlist
+            add to openlist
             calculate f=g+h
-}while(goal is in openlist)
+            set parent is curnode;
+        if valiable node in openlist
+            if node.g lower than cur.g
+                curnode = node.parent
+                calculate f=g+h
+    if goal is in openlist
+        break;
+}
 if openlist is empty , no path;
 ```
+
+
 
 
 
