@@ -10,20 +10,22 @@
 
 
 
-astarPoint getLeastPoint(vector<astarPoint> openlist){
-    vector<int> flist;
-    astarPoint minfpoint;
-    for (int i =0; i< openlist.size(); i++){
-        flist.push_back(openlist[i].fvalue);
+Node nullnode = Node(-1,-1);
+astarPoint nullpoint= astarPoint(nullnode);
+
+
+astarPoint  getLeastPoint(vector<astarPoint> openlist){
+    if (openlist.empty()) return nullpoint;
+    int min=openlist[0].fvalue;
+    int minpos=0;
+    
+    for(int i=0; i<openlist.size();i++){
+        if (openlist[i].fvalue < min){
+            min= openlist[i].fvalue;
+            minpos=i;
+        }
     }
-    if(!openlist.empty()){
-        vector<int> ::iterator minf = min_element(begin(flist),end(flist) );
-        auto minfPosition= std::distance(begin(flist),minf);
-        astarPoint minfpoint = openlist[minfPosition];
-        return minfpoint;
-        
-    }
-    else return minfpoint;
+    return openlist[minpos];
 }
 
 bool removePoint(vector<astarPoint> &list,astarPoint point){
@@ -37,25 +39,34 @@ bool removePoint(vector<astarPoint> &list,astarPoint point){
         }
     }
     return false;
-    
 }
 
-bool InList(vector<astarPoint> list, astarPoint point){
-    for (int i=0; i< list.size(); i++){
-        if (list[i].node.col == point.node.col && list[i].node.row == point.node.row )
+bool InList(vector<astarPoint> list,  astarPoint point){
+    if (list.empty()) return false;
+    for (int i = 0; i< list.size(); i++){
+        if (list[i].node.col == point.node.col && list[i].node.row == point.node.row ){
             return true;
+        }
     }
     return false;
 }
 
 
 int calG(astarPoint cur, astarPoint target){
-    int extraG = abs(cur.node.col - target.node.col) + abs(cur.node.row - target.node.row);
-    if (extraG == 1) extraG = kcost1;
-    else extraG= kcost2;
+    //int extraG = kcost1* (abs(cur.node.col - target.node.col) + abs(cur.node.row - target.node.row));
+//    if (extraG == 1) extraG = kcost1;
+//    else{
+//        extraG= kcost2;
+//    }
+    int extraG= kcost1;
     
     int parentG;
-    parentG = target.parent.gvalue;
+    if (target.parent == NULL ){
+        parentG = 0;
+    }
+    else {
+        parentG = target.parent->gvalue;
+    }
     
     return int(extraG + parentG);
 };
@@ -65,82 +76,146 @@ int calH(astarPoint target, astarPoint goal){
 };
 
 int calF(astarPoint target){
-    return target. gvalue + target. hvalue;
+    return (target. gvalue + target. hvalue);
 };
 
+void printPathPoint(vector<astarPoint> path){
+    /*
+     print path on screen , step :(row, col)
+     
+     :param: path point
+     
+     :return: none
+     
+     author: jiayao
+     date: 2017-12-14 pku
+     */
+    cout<<"---- path point----"<<endl;
+    for(int i = 0; i < path.size() ; i++){
+        cout<<path[i].node.step<<": ("<<path[i].node.row<<","<<path[i].node.col<<") ";
+    }
+    cout<<endl;
+}
 
-vector<astarPoint> astar(Node curPos, Node start, Node goal, vector<vector<int>> &costmap){
+
+vector<astarPoint> surroundPoint(astarPoint cur, vector<vector<int>> costmap, vector<astarPoint> closelist){
+    vector<astarPoint> surround;
+    for (int i = 0 ; i< TURNMAX; i++){
+        astarPoint target = astarPoint(getNext(cur.node, dirlist[i]));
+        if (checkRange(target.node, costmap) && checkObs(target.node, costmap) \
+            && !InList(closelist, target)){
+            surround.push_back(target);
+        }
+    }
+    return surround;
+}
+
+vector<astarPoint> astar(Node curPos, Node start, Node goal, vector<vector<int> > &costmap){
     
     vector<astarPoint> openlist;
     vector<astarPoint> closelist;
     
-    astarPoint startPoint;
-    startPoint.node.col= start.col;
-    startPoint.node.row= start.row;
-    
-    astarPoint goalPoint;
-    goalPoint.node.col= goal.col;
-    goalPoint.node.row= goal.row;
-    
-    
+    astarPoint startPoint(start);
+    astarPoint goalPoint(goal);
     
     openlist.push_back(startPoint);
     
     while(!openlist.empty()){
         astarPoint cur = getLeastPoint(openlist);
         
-        removePoint(openlist,cur);
-        closelist.push_back(cur);
+        removePoint(openlist, cur);
+        closelist.push_back( cur);
         
-        // find around
-        for (int i=0 ; i< TURNMAX; i++){
-            astarPoint target;
-            target.node= getNext(cur.node, dirlist[i]);
+        
+        // surround around
+        vector <astarPoint> targetlist = surroundPoint(cur,costmap,closelist);
+       
+        for(int i =0 ; i< targetlist.size() ; i++){
+            astarPoint target= targetlist[i];
             
-            // if not in list , add it in list;
-            if (checkRange(target.node, costmap) && checkObs(target.node, costmap) \
-                && checkUnvisited(target.node,costmap) && InList(openlist, target) \
-                && !InList(closelist, target)){
-                target.parent.node = cur.node;
+            if (!InList(openlist, target)){
+                astarPoint* p = new astarPoint(Node(0,0));
+                *p = cur;
+                target.parent= p;
+                
                 target.gvalue= calG(cur,target);
                 target.hvalue= calH(target,goalPoint);
                 target.fvalue= calF(target);
-                
                 openlist.push_back(target);
+                
             }
             else{
                 //cal g
-                int tempG = calG(cur, target);
-                if (tempG < target.gvalue){
-                    target.parent.node = cur.node;
-                    target.gvalue= tempG;
-                    target.fvalue= calF(target);
+                int tempG = calG( cur, target);
+                if (tempG < cur.gvalue){
+                    astarPoint* p = new astarPoint(Node(0,0));
+                    *p = cur;
+                    target.parent= p;
+                    
+                    target.gvalue =tempG;
+                    target.fvalue =calF(cur);
+                }
+                
+            }
+        }
+        
+       if (InList(openlist, goalPoint)){
+            vector<astarPoint> list;
+            int tmp;
+                
+            for (int i = 0; i< openlist.size(); i++){
+                if (openlist[i].node.col == goalPoint.node.col && \
+                    openlist[i].node.row == goalPoint.node.row ){
+                    tmp=i;
+                    break;
                 }
             }
-            
-            if (InList(openlist, goalPoint)){
-                return openlist;
+           
+           list.push_back(openlist[tmp]);
+           
+            astarPoint * father= openlist[tmp].parent;
+    
+            while ( father != NULL ){
+                
+                list.push_back(*father);
+                father= (*father).parent;
             }
-            
-            
-        }
+           
+          
+           
+           
+           return list;
+       }
         
     }
     return openlist;
 }
 
 
-vector<Node> astarPath(Node &curPos, Node start, Node goal,vector<vector<int> > & costmap, vector<Node>& path){
+vector<Node> astarPath(Node &curPos, Node start, Node goal,vector<vector<int> > & costmap,vector<vector<int> > & grid, vector<Node>& path){
     
-    vector<astarPoint> p2pPath = astar(curPos, start, goal, costmap);
+    
+    vector<astarPoint> p2pPath;
+    p2pPath = astar(curPos, start, goal, costmap);
+    
+    
+    
     reverse(p2pPath.begin(),p2pPath.end());
-    Node tmp;
+    
+    printPathMap(grid,path);
+    cout<<" point to point path :"<<endl;
+    printPathPoint(p2pPath);
+    
+   
     for(int i=0 ; i < p2pPath.size(); i++){
-        tmp = p2pPath[i].node;
-        PathStep++;
-        tmp.step = PathStep;
+        Node tmp = p2pPath[i].node;
+        tmp.step = PathStep++;
         path.push_back(tmp);
+        grid[tmp.row][tmp.col]= Visited;
     }
+    
+    
     curPos = goal;
+    
     return path;
 }

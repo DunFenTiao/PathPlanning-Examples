@@ -34,9 +34,9 @@ int main(int argc, const char * argv[]){
     //initialized
     
     //ADD START
-    Node start;
-    start.col =0;
-    start.row =0;
+    Node start(0,0);
+    //start.col =0;
+    //start.row =0;
     start.step= PathStep;
     //grid[start.row][start.col]=PathStep;
     

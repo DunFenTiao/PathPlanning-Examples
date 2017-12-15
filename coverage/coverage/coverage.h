@@ -40,9 +40,7 @@ const static int unVisited=0;
 const static int Visited=1;
 extern int PathStep;
 static int dirlist[TURNMAX]={RIGHT,DOWN, LEFT,UP};
-//astar
-const static int kcost1=10; //直走消耗
-const static int kcost2=14; //斜走消耗
+
 
 
 struct Node{
@@ -51,6 +49,8 @@ struct Node{
     int step; // step in the path
     void print(){
         cout<< "node("<<row<<","<<col<<")"<<endl;
+    }
+    Node(int _row, int _col): row(_row),col(_col),step(0){
     }
 };
 

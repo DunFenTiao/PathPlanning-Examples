@@ -7,7 +7,7 @@
 //
 
 #include "coverage.h"
-//#include "astar.h"
+#include "astar.h"
 #include "directGo.h"
 
 int PathStep=1;
@@ -104,7 +104,7 @@ Node getNext(Node node, int dir){
      author: jiayao
      date: 2017-12-14 pku
      */
-    Node nextNode;
+    Node nextNode(0,0);
     switch (dir) {
         case RIGHT:{
             nextNode.col=node.col+1;
@@ -219,9 +219,9 @@ vector<Node> updateUnVisit(vector<vector<int> >  &grid){
     for(int i=0; i < rows; i++){
         for(int j=0; j < cols; j++){
             if (grid[i][j] == unVisited){
-                Node newnode;
-                newnode.row=i;
-                newnode.col=j;
+                Node newnode(i,j);
+                //newnode.row=i;
+                //newnode.col=j;
                 newnode.step= 0;
                 unVisitList.push_back(newnode);
             }
@@ -279,9 +279,9 @@ bool move(Node &curPos, Node toGo,vector<vector<int> > & grid, vector<Node>& pat
     
     //point to point planning
     
-    //astarPath(curPos, curPos, toGo, costmap, path);
+    astarPath(curPos, curPos, toGo,  costmap, grid, path);
     
-    directGoPath(costmap, grid, path, curPos, toGo);
+    //directGoPath(costmap, grid, path, curPos, toGo);
     
     return true;
 }
@@ -335,7 +335,7 @@ vector< Node > MinOverlap(Node start, vector<vector<int> > & grid){
     
     vector <Node> path;
     
-    Node tmpNode; // tmp save next node
+    //Node tmpNode; // tmp save next node
     int TryTurn=TURNMAX;
     
     //for debug
@@ -351,7 +351,7 @@ vector< Node > MinOverlap(Node start, vector<vector<int> > & grid){
     
     
     while(checkRange(curPos,grid) && !checkFinish(grid) && count<count_max){
-        tmpNode= getNext(curPos,curDir);
+        Node tmpNode= getNext(curPos,curDir);
         
         // if can go
         if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
