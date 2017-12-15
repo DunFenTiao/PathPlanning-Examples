@@ -13,10 +13,12 @@ date : 2017-12-15
 
 例子，运行 /coverage/coverage/main.cpp：
 ![astar result][1]
+
+图片解释：
 fig. 1 初始地图，0 free -1 obstacle 1 startpoint
-fig. 2 覆盖之后，数字代表步数step，-1为障碍物。覆盖方法是贪心法。
-fig. 3 遇到deadlock的情况(周围点都走过，或者为障碍物，图中为点32)，为了保证完整覆盖，利用点到点规划到新起点后继续进行覆盖，这里采用astar点到点规划（另有有回溯法可选）
-fig. 4 完整路径 步数：坐标（col,row） 
+fig. 2 第一次覆盖后的地图，数字代表步数step，-1为障碍物，遇到deadlock（step 32 in (2,1)）
+fig. 3 遇到deadlock的情况后的点到点规划（32-34），第二次覆盖（36-37）完成覆盖
+fig. 4 完整路径，步数：坐标（col,row） 
 ## todo
 
 - Spiral tree coverage in matlab upload;
@@ -66,7 +68,7 @@ Bio-inspired
 - 一直以一个方向前进
 - 如果不能走则按顺序换方向
 - 如果死锁寻找最近未覆盖点，点到点规划过去
-- 然后重新开心覆盖
+- 然后重新开始覆盖
 - 直到地图全部走过
 
 伪代码
