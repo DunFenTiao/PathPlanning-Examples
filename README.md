@@ -62,6 +62,7 @@ fig. 4 完整路径，步数：坐标（col,row）*
 
 根据地图类型的不同，覆盖算法可以有诸多分类，如下图。此文中只针对栅格地图（grid-based coverage）的全覆盖路径规划算法。
 ![coverage planning][2]
+
 *fig 综述[217] 对于覆盖算法的总结(部分)， 根据地图类型的不同，覆盖算法可以有诸多分类，
 - class exact cell decomposition, 
 - morse-based cell decomposition, 
@@ -141,7 +142,8 @@ while(current node is in range , still has unvisited node in map){
 ### 覆盖算法
 
 >  ---翻译《Planning Algorithm》CH7 覆盖算法
-举一个coverage planning覆盖规划的例子，试想一个自主运动的割草机，需要在一个有很多障碍物的地方工作，例如房屋、树木、车库，和复杂的边界。
+
+>举一个coverage planning覆盖规划的例子，试想一个自主运动的割草机，需要在一个有很多障碍物的地方工作，例如房屋、树木、车库，和复杂的边界。
 什么样的zig-zag路径对于割草机是最好的？重覆盖的路程能最小化么？割草机停止和转弯的次数能最小么。
 这样的应用的例子除了割草，还有自动工作，粉刷，吸尘器，采矿等。参见[217]综述 
 
@@ -162,8 +164,11 @@ while(current node is in range , still has unvisited node in map){
 # Bio-inspired Coverage Planning 
 
 selected figures in our paper to submitt to IJARS 
+
 ![our methods][7]
+
 ![neurons activity][9]
+
 ![flow chart][8]
 
 ## Point to point path planning algorithm
@@ -173,7 +178,7 @@ outline:
 非递归
 广度优先
 深度优先
-使用对战
+使用堆栈
 
 ### Astar point to point planning
 步骤：
@@ -214,7 +219,7 @@ if openlist is empty , no path;
 
 
 
-  [216]: H. Choset. Coverage of known spaces: The boustrophedon cellular decomposition.
+ [216]: H. Choset. Coverage of known spaces: The boustrophedon cellular decomposition.
 Autonomous Robots, 9:247–253, 2000.
  [217]: H. Choset. Coverage for robotics – A surveyof recent results. Annals of Mathematics and Artificial Intelligence,31:113–126, 2001.
 
