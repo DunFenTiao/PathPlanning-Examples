@@ -250,6 +250,7 @@
 				1878E5A51FE2151E0021CD1B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

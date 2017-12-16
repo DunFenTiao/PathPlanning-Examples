@@ -320,7 +320,7 @@ Node Nearest(Node curPos, vector<Node> unVisitList){
 
 
 
-vector< Node > MinOverlap(Node start, vector<vector<int> > & grid){
+vector< Node > CoverageSprial(Node start, vector<vector<int> > & grid){
     /*
      Coverage path planning , coverage unvisited node following the direction in directionlist, if meeting deadlocks , ignore the visited flag, do point to point path planning to escape and continue coverage
      
@@ -349,6 +349,8 @@ vector< Node > MinOverlap(Node start, vector<vector<int> > & grid){
     grid[curPos.row][curPos.col]= Visited;
     path.push_back(curPos);
     
+    printPathMap(grid,path);
+    
     
     while(checkRange(curPos,grid) && !checkFinish(grid) && count<count_max){
         Node tmpNode= getNext(curPos,curDir);
@@ -371,7 +373,7 @@ vector< Node > MinOverlap(Node start, vector<vector<int> > & grid){
             
             // meet deadlock, all the direction has been visited or obs, cant go.
             if(TryTurn == 0){
-                cout<<"deadlock"<<endl;
+                
                 if (checkFinish(grid) == false){
                     vector<Node> unVisitList = updateUnVisit(grid);
                     Node toGo = Nearest(curPos,unVisitList);
@@ -386,7 +388,154 @@ vector< Node > MinOverlap(Node start, vector<vector<int> > & grid){
         
     }
     
-    if (checkFinish(grid)) cout<<"finish"<<endl;
+    
+    
+    return path;
+}
+
+
+vector< Node > CoveragePlowing(Node start, vector<vector<int> > & grid){
+    /*
+     Coverage path planning , coverage unvisited node following the direction in directionlist, if meeting deadlocks , ignore the visited flag, do point to point path planning to escape and continue coverage
+     
+     :param:  start node
+     :param:  grid map
+     
+     :return: whole path
+     
+     author: jiayao
+     date: 2017-12-14 pku
+     */
+    
+    vector <Node> path;
+    
+    //Node tmpNode; // tmp save next node
+    int TryTurn=2;
+    
+    //for debug
+    int count=0;
+    int count_max=1000;
+    
+    //initial start
+    Node curPos=start;
+    int curDir= RIGHT; // start direction set
+    curPos.step = PathStep;
+    grid[curPos.row][curPos.col]= Visited;
+    path.push_back(curPos);
+    
+    printPathMap(grid,path);
+    
+    
+    while(checkRange(curPos,grid) && !checkFinish(grid) && count<count_max){
+        Node tmpNode= getNext(curPos,curDir);
+        
+        // if can go
+        if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+            curPos=tmpNode;
+            PathStep++;
+            curPos.step = PathStep;
+            grid[curPos.row][curPos.col]= Visited;
+            path.push_back(curPos);
+            
+            TryTurn = 2;
+        }
+        
+        // change direction
+        else{
+          
+            curDir= DOWN;
+            tmpNode= getNext(curPos,curDir);
+            if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+                curPos=tmpNode;
+                PathStep++;
+                curPos.step = PathStep;
+                grid[curPos.row][curPos.col]= Visited;
+                path.push_back(curPos);
+                
+                curDir = RIGHT;
+                tmpNode= getNext(curPos,curDir);
+                if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+                    curPos=tmpNode;
+                    PathStep++;
+                    curPos.step = PathStep;
+                    grid[curPos.row][curPos.col]= Visited;
+                    path.push_back(curPos);
+                    
+                    TryTurn=1;
+                }
+                else{
+                    curDir = LEFT;
+                    tmpNode= getNext(curPos,curDir);
+                    if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+                        curPos=tmpNode;
+                        PathStep++;
+                        curPos.step = PathStep;
+                        grid[curPos.row][curPos.col]= Visited;
+                        path.push_back(curPos);
+                        
+                        TryTurn=1;
+                    }
+                }
+            }
+            
+            
+            
+            else{
+                curDir= UP;
+                tmpNode= getNext(curPos,curDir);
+                if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+                    curPos=tmpNode;
+                    PathStep++;
+                    curPos.step = PathStep;
+                    grid[curPos.row][curPos.col]= Visited;
+                    path.push_back(curPos);
+                    
+                    curDir = RIGHT;
+                    tmpNode= getNext(curPos,curDir);
+                    if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+                        curPos=tmpNode;
+                        PathStep++;
+                        curPos.step = PathStep;
+                        grid[curPos.row][curPos.col]= Visited;
+                        path.push_back(curPos);
+                        
+                        TryTurn=1;
+                    }
+                    else{
+                        curDir = LEFT;
+                        tmpNode= getNext(curPos,curDir);
+                        if (checkRange(tmpNode,grid) && checkObs(tmpNode,grid) && checkUnvisited(tmpNode,grid) ){
+                            curPos=tmpNode;
+                            PathStep++;
+                            curPos.step = PathStep;
+                            grid[curPos.row][curPos.col]= Visited;
+                            path.push_back(curPos);
+                            
+                            TryTurn=1;
+                        }
+                    }
+                }
+                else{
+                    if (checkFinish(grid) == false){
+                        vector<Node> unVisitList = updateUnVisit(grid);
+                        Node toGo = Nearest(curPos,unVisitList);
+                        
+                        //start point 2 point to escape
+                        move(curPos,toGo,grid,path);
+                    }
+                }
+
+            }
+            
+            
+            // meet deadlock, all the direction has been visited or obs, cant go.
+            
+        }
+        count++;
+        
+    }
+    
+    
     
     return path;
 }

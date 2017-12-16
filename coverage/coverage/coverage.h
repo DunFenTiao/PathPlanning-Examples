@@ -18,8 +18,7 @@
 #include <vector>
 #include <math.h>
 using namespace std;
-#define SIZE_M 6
-#define SIZE_N 6
+
 
 #define RIGHT 0
 #define DOWN 1
@@ -54,8 +53,10 @@ struct Node{
     }
 };
 
-vector< Node > MinOverlap(Node start, vector<vector<int> > & grid);
+vector< Node > CoverageSprial(Node start, vector<vector<int> > & grid);
 vector<Node> updateUnVisit(vector<vector<int> > & grid);
+
+vector< Node > CoveragePlowing(Node start, vector<vector<int> > & grid);
 
 Node getNext(Node node, int dir);
 Node Nearest(Node curPos, vector<Node> unVisitList);

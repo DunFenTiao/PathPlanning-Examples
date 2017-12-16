@@ -90,9 +90,9 @@ void printPathPoint(vector<astarPoint> path){
      author: jiayao
      date: 2017-12-14 pku
      */
-    cout<<"---- path point----"<<endl;
+    cout<<"----astar path----"<<endl;
     for(int i = 0; i < path.size() ; i++){
-        cout<<path[i].node.step<<": ("<<path[i].node.row<<","<<path[i].node.col<<") ";
+        cout<<" ("<<path[i].node.row<<","<<path[i].node.col<<") ";
     }
     cout<<endl;
 }
@@ -202,8 +202,9 @@ vector<Node> astarPath(Node &curPos, Node start, Node goal,vector<vector<int> > 
     
     reverse(p2pPath.begin(),p2pPath.end());
     
+    cout<<"coverage  "<<endl;
     printPathMap(grid,path);
-    cout<<" point to point path :"<<endl;
+   
     printPathPoint(p2pPath);
     
    

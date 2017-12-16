@@ -9,9 +9,11 @@
 #include <iostream>
 #include "coverage.h"
 
+#define SIZE_M 6
+#define SIZE_N 6
 
 int main(int argc, const char * argv[]){
-    vector<vector <int> > grid(6,vector<int>(6));
+    vector<vector <int> > grid(SIZE_M ,vector<int>(SIZE_N ));
     
     int map[SIZE_M][SIZE_N]={
         0,0,0,0,0,0,
@@ -40,10 +42,15 @@ int main(int argc, const char * argv[]){
     start.step= PathStep;
     //grid[start.row][start.col]=PathStep;
     
-    vector<Node> path = MinOverlap(start, grid);
-    printPathNode(path);
+
+    vector<Node> path =  CoverageSprial(start, grid);
+ //   vector<Node> path =  CoveragePlowing(start, grid);
+    
+    
+    cout<<"result  "<<endl;
     
     printPathMap(grid, path);
+    printPathNode(path);
     
     return 0;
 }
